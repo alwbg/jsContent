@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script type="text/javascript">
+			function split( k, v ){
+				if( 'url_encoded_fmt_stream_map' != k ) return;
+				if( /\%26/.test( v ) ){
+					var $1;
+					v = decodeURIComponent( v );
+					/^([^=]+)/.test( v );
+					$1 = RegExp.$1;
+					json = v.split( new RegExp( ',(?='+ $1 +'=)' ));
+					console.log( $1 );
+					var _Map = [];
+					var tem_map;
+					each( json, function( k, v ){
+						//v = decodeURIComponent( v );
+						// console.log(v,'------------');
+						tem_map = {};
+						each( v.split( /&/g ), function( key, val ){
+							val = val.split( /=/ );
+							this[ val[ 0 ] ] = decodeURIComponent( val[ 1 ] );
+							// console.log( key, val )
+						}, tem_map );
+						if( /avc1.*mp4/.test( tem_map.type ) && /^medium$/.test( tem_map.quality ) )
+							this.push( tem_map );
+					}, _Map )
+				}
+				try{
+					window.webkit.messageHandlers.YouTubeAddress.postMessage( _Map );
+				}catch( e ){
+					alert( e )
+				}
+				console.log( _Map );
+				// console.log('-',k,v);
+			}
+
+			function each( data, loop, context ){
+				if( data instanceof Array && loop instanceof Function ){
+					for( var i = 0, len = data.length; i < len; i++ ){
+						if( loop.call( context, i, data[ i ] ) ) continue;
+					}
+				}
+			}
+			function loadXMLDoc(){
+				var xmlhttp;
+				if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+					xmlhttp=new XMLHttpRequest();
+				} else {// code for IE6, IE5
+					xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				xmlhttp.onreadystatechange=function(){
+					if ( xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
+						var json = xmlhttp.responseText.split( '&' );
+						var app = {};
+						for( var i=0, len = json.length; i < len; i++ ) {
+							split.apply( null, json[i].split( '=' ) );
+						}
+					}
+				}
+				var search = location.search.replace( /^\?/, '' );
+				if( ! search ) alert( "need ?[code]" );
+				xmlhttp.open('GET','https://www.youtube.com/get_video_info?video_id=' + search,true);
+				xmlhttp.send();
+			}
+			 loadXMLDoc()
+		</script>
+</head>
+<body>
+</body>
+</html>
