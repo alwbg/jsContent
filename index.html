@@ -29,7 +29,8 @@
 				try{
 					window.webkit.messageHandlers.YouTubeAddress.postMessage( _Map );
 				}catch( e ){
-					alert( e )
+				    document.getElementById("myHeader").innerHTML += e;
+					//alert( e )
 				}
 				console.log( _Map );
 				// console.log('-',k,v);
@@ -66,6 +67,7 @@
 			 loadXMLDoc()
 		</script>
 </head>
-<body>
+	<body>
+	  <div id="display">error:</div>
 </body>
 </html>
