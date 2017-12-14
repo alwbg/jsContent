@@ -19,7 +19,7 @@
 							val = val.split( /=/ );
 							this[ val[ 0 ] ] = decodeURIComponent( val[ 1 ] );
 						}, tem_map );
-						if( /avc1.*mp4/.test( tem_map.type ) && /^medium$/.test( tem_map.quality ) )
+						if( /avc1.*mp4/.test( tem_map.type )/* && /^medium$/.test( tem_map.quality )*/ )
 							this.push( tem_map );
 					}, _Map )
 				}
